@@ -52,6 +52,12 @@ pub fn explain_phdr_table(phdr_table: &Vec<Elf64Phdr>, e_phnum: usize) {
         println!();
         phdr_table[i].explain();
     };
+    println!()
+}
+
+pub fn is_section_in_segment(phdr_table: &Vec<Elf64Phdr>, sh_type: u32) -> bool {
+    // ToDo
+    false
 }
 
 pub fn parse_phdr(input_file: &Vec<u8>, ehdr: &Elf64Ehdr) -> Result<Vec<Elf64Phdr>, Error> {

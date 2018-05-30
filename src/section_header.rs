@@ -86,7 +86,7 @@ pub fn explain_shdr_table(shdr_table: &Vec<Elf64Shdr>, e_shnum: usize, e_shstrnd
         shdr_table[i].explain(&shdr_table[i].get_name(shstrtab));
     };
 
-    println!("\nFlags:\n{}", SH_FLAGS);
+    println!("\nFlags:\n{}\n", SH_FLAGS);
 }
 
 pub fn parse_shdr(input_file: &Vec<u8>, ehdr: &Elf64Ehdr) -> Result<Vec<Elf64Shdr>, Error> {

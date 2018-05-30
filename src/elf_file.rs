@@ -24,12 +24,12 @@ impl ElfFile {
     }
 
     pub fn explain_phdr(&self) {
-        println!("\n\nProgram Header Table of {} with {} entries", self.file_path, self.ehdr.e_phnum);
+        println!("Program Header Table of {} with {} entries", self.file_path, self.ehdr.e_phnum);
         explain_phdr_table(&self.phdr, self.ehdr.e_phnum as usize);
     }
 
     pub fn explain_shdr(&self) {
-        println!("\n\nSection Header Table of {} with {} entires", self.file_path, self.ehdr.e_shnum);
+        println!("Section Header Table of {} with {} entires", self.file_path, self.ehdr.e_shnum);
         explain_shdr_table(&self.shdr, self.ehdr.e_shnum as usize, self.ehdr.e_shstrndx as usize, &self.file_buffer);
     }
 

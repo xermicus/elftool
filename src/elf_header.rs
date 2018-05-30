@@ -69,7 +69,7 @@ impl EIdent {
         }
 
         println!("\tOS ABI Version:\t\t\t\t0x{:x}\t", self.ei_abiversion);
-        println!("\tEI_PAD:\t\t\t\t\t{:?}", self.ei_pad);
+        println!("\tEI_PAD:\t\t\t\t\t{:?}\n", self.ei_pad);
     }
 } 
 
@@ -109,6 +109,7 @@ impl Elf64Ehdr {
         println!("\tSection Headers Size:\t\t\t0x{:x}\tBytes", self.e_shentsize);
         println!("\tSection Headers:\t\t\t0x{:x}", self.e_shnum);
         println!("\tSection Header String Table Index:\t0x{:x}", self.e_shstrndx);
+        println!()
     }
 }
 
