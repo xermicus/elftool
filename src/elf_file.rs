@@ -41,10 +41,10 @@ impl ElfFile {
 }
 
 pub fn parse_from_disk(path: &str) -> Result<ElfFile, Error> {
-    let mut file = File::open(path).unwrap();
+    let mut file = File::open(path)?;
     let mut file_buffer = Vec::new();
     let ehdr_size = size_of::<Elf64Ehdr>();
-    assert!(file.read_to_end(&mut file_buffer).unwrap() > ehdr_size);
+    assert!(file.read_to_end(&mut file_buffer)? > ehdr_size);
 
     let ehdr = parse_ehdr(&file_buffer)?;
     let phdr = parse_phdr(&file_buffer, &ehdr)?;

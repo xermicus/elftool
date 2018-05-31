@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::io;
 
 // Sources:
 // man 5 elf
@@ -312,6 +313,13 @@ pub enum Error {
     EIdentParseError,
     EhdrParseError,
     PhdrNotRelevant,
+    FileError(io::Error),
+}
+
+impl From<io::Error> for Error {
+    fn from(e: io::Error) -> Error {
+        Error::FileError(e)
+    }
 }
 
 pub fn cast_u64(slice: &[u8], keep_endian: bool) -> Result<u64, Error> {
