@@ -1,4 +1,5 @@
 extern crate elftool;
+use elftool::helpers::Error;
 
 use std::env;
 
@@ -42,16 +43,29 @@ Opts:\t-h\tdisplay this help
 \t-s\tdisplay the Section Header Table");
 }
 
+fn fail(e: Error) {
+	match e {
+		Error::ByteCastError => println!("ByteCastError"),
+		Error::EIdentParseError => println!("Failed to parse e_ident"),
+		Error::EhdrParseError => println!("Failed to parse ELF Header"),
+		Error::PhdrNotRelevant => println!("Program Header not relevant"),
+		_ => println!("IO Error"),
+	}
+}
+
 fn main() {
     let opts = parse_args();
     if opts.help {
         help();
     } else {
-         if let Ok(elf) = elftool::elf_file::parse_from_disk(&opts.file) {
-             if opts.all { elf.explain_all(); return }
-             if opts.ehdr { elf.explain_ehdr() }
-             if opts.phdr { elf.explain_phdr() }
-             if opts.shdr { elf.explain_shdr() }
-         };
-    };
+		match elftool::elf_file::parse_from_disk(&opts.file) {
+			Ok(elf) => {
+             	if opts.all { elf.explain_all(); return }
+             	if opts.ehdr { elf.explain_ehdr() }
+             	if opts.phdr { elf.explain_phdr() }
+             	if opts.shdr { elf.explain_shdr() }
+			},
+			Err(e) => fail(e)
+		}
+    }
 }

@@ -124,6 +124,8 @@ pub fn parse_e_ident(input_buffer: &Vec<u8>) -> Result<EIdent, Error> {
     e_ident.ei_abiversion = input_buffer[8];
     e_ident.ei_pad.copy_from_slice(&input_buffer[9..16]);
     
+	// No 32bit support ATM
+	if e_ident.ei_class != 2 { return Err(Error::EIdentParseError) };
     Ok(e_ident)
 }
 

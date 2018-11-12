@@ -55,8 +55,8 @@ pub fn explain_phdr_table(phdr_table: &Vec<Elf64Phdr>, e_phnum: usize) {
     println!()
 }
 
-pub fn is_section_in_segment(phdr_table: &Vec<Elf64Phdr>, sh_type: u32) -> bool {
-    // ToDo
+pub fn is_section_in_segment(_phdr_table: &Vec<Elf64Phdr>, _sh_type: u32) -> bool {
+    // TODO
     false
 }
 
