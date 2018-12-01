@@ -5,7 +5,6 @@ use std::env;
 
 #[derive(Default)]
 struct Options {
-    all: bool,
     help: bool,
     ehdr: bool,
     phdr: bool,
@@ -23,7 +22,11 @@ fn parse_args() -> Options {
 
     for arg in args {
         match arg.as_ref() {
-            "-a" => opts.all = true,
+            "-a" => {
+				opts.ehdr = true;
+				opts.phdr = true;
+				opts.shdr = true;
+			},
             "-e" => opts.ehdr = true,
             "-p" => opts.phdr = true,
             "-s" => opts.shdr = true,
@@ -60,7 +63,6 @@ fn main() {
     } else {
 		match elftool::elf_file::parse_from_disk(&opts.file) {
 			Ok(elf) => {
-             	if opts.all { elf.explain_all(); return }
              	if opts.ehdr { elf.explain_ehdr() }
              	if opts.phdr { elf.explain_phdr() }
              	if opts.shdr { elf.explain_shdr() }

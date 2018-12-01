@@ -42,19 +42,19 @@ impl Elf64Shdr {
     }
 
     pub fn explain(&self, name: &String) {
-        print!("0x{:016x}\t", self.sh_offset);
-        print!("0x{:016x}\t", self.sh_size);
-        print!("0x{:016x}\t", self.sh_link);
+        print!("0x{:016}\t", self.sh_offset);
+        print!("0x{:016}\t", self.sh_size);
+        print!("0x{:016}\t", self.sh_link);
         print!("  {}\t", self.parse_flags());
         if let Some(t) = SH_TYPES.get(&self.sh_type) {
             println!("{}", t);
         } else {
             println!("Unknown");
         }
-        print!("0x{:016x}\t", self.sh_addr);
-        print!("0x{:016x}\t", self.sh_entsize);
-        print!("0x{:016x}\t", self.sh_info);
-        print!("0x{:016x}\t", self.sh_addralign);
+        print!("0x{:016}\t", self.sh_addr);
+        print!("0x{:016}\t", self.sh_entsize);
+        print!("0x{:016}\t", self.sh_info);
+        print!("0x{:016}\t", self.sh_addralign);
         println!("{}", name);
     }
 
@@ -73,7 +73,7 @@ impl Elf64Shdr {
     }
 }
 
-pub fn explain_shdr_table(shdr_table: &Vec<Elf64Shdr>, e_shnum: usize, e_shstrndx: usize, input_file: &Vec<u8>) {
+pub fn explain_shdr_table(shdr_table: &Vec<Elf64Shdr>, e_shstrndx: usize, input_file: &Vec<u8>) {
     let shstrtab_start = shdr_table[e_shstrndx].sh_offset as usize;
     let shstrtab_end = (shdr_table[e_shstrndx].sh_offset + shdr_table[e_shstrndx].sh_size) as usize;
     let shstrtab = &input_file[shstrtab_start..shstrtab_end];
@@ -81,10 +81,10 @@ pub fn explain_shdr_table(shdr_table: &Vec<Elf64Shdr>, e_shnum: usize, e_shstrnd
     println!("Offset\t\t\tSize\t\t\tLink\t\t\tFlags\t\t\tType");
     println!("Address\t\t\tEntsize\t\t\tInfo\t\t\tAlign\t\t\tName");
 
-    for i in 0..e_shnum {
-        println!();
-        shdr_table[i].explain(&shdr_table[i].get_name(shstrtab));
-    };
+	shdr_table.iter().for_each(|n| {
+		println!();
+		n.explain(&n.get_name(shstrtab));
+	});
 
     println!("\nFlags:\n{}\n", SH_FLAGS);
 }

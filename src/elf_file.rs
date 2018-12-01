@@ -6,7 +6,6 @@ use helpers::Error;
 use std::fs::File;
 use std::io::Read;
 use std::mem::size_of;
-//use std::path::Path;
 
 pub struct ElfFile {
     pub file_path: String,
@@ -25,12 +24,12 @@ impl ElfFile {
 
     pub fn explain_phdr(&self) {
         println!("Program Header Table of {} with {} entries", self.file_path, self.ehdr.e_phnum);
-        explain_phdr_table(&self.phdr, self.ehdr.e_phnum as usize);
+        explain_phdr_table(&self.phdr);
     }
 
     pub fn explain_shdr(&self) {
         println!("Section Header Table of {} with {} entires", self.file_path, self.ehdr.e_shnum);
-        explain_shdr_table(&self.shdr, self.ehdr.e_shnum as usize, self.ehdr.e_shstrndx as usize, &self.file_buffer);
+        explain_shdr_table(&self.shdr, self.ehdr.e_shstrndx as usize, &self.file_buffer);
     }
 
     pub fn explain_all(&self) {
