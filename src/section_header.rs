@@ -42,19 +42,19 @@ impl Elf64Shdr {
     }
 
     pub fn explain(&self, name: &String) {
-        print!("0x{:016}\t", self.sh_offset);
-        print!("0x{:016}\t", self.sh_size);
-        print!("0x{:016}\t", self.sh_link);
+        print!("0x{:016x}\t", self.sh_offset);
+        print!("0x{:016x}\t", self.sh_size);
+        print!("0x{:016x}\t", self.sh_link);
         print!("  {}\t", self.parse_flags());
         if let Some(t) = SH_TYPES.get(&self.sh_type) {
             println!("{}", t);
         } else {
             println!("Unknown");
         }
-        print!("0x{:016}\t", self.sh_addr);
-        print!("0x{:016}\t", self.sh_entsize);
-        print!("0x{:016}\t", self.sh_info);
-        print!("0x{:016}\t", self.sh_addralign);
+        print!("0x{:016x}\t", self.sh_addr);
+        print!("0x{:016x}\t", self.sh_entsize);
+        print!("0x{:016x}\t", self.sh_info);
+        print!("0x{:016x}\t", self.sh_addralign);
         println!("{}", name);
     }
 

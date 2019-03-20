@@ -20,9 +20,9 @@ impl Elf64Phdr {
     }
     
     pub fn explain(&self) {
-        print!("0x{:016}\t", self.p_offset);
-        print!("0x{:016}\t", self.p_paddr);
-        print!("0x{:016}\t", self.p_filesz);
+        print!("0x{:016x}\t", self.p_offset);
+        print!("0x{:016x}\t", self.p_paddr);
+        print!("0x{:016x}\t", self.p_filesz);
         if let Some(t) = P_TYPES.get(&self.p_type) {
             match t {
                 &"PT_INTERP" => println!("{}", t), // TODO Print linker name
@@ -31,9 +31,9 @@ impl Elf64Phdr {
         } else {
             println!("An unknown type");
         };
-        print!("0x{:016}\t", self.p_align);
-        print!("0x{:016}\t", self.p_vaddr);
-        print!("0x{:016}\t", self.p_memsz);
+        print!("0x{:016x}\t", self.p_align);
+        print!("0x{:016x}\t", self.p_vaddr);
+        print!("0x{:016x}\t", self.p_memsz);
         let parse_flags = |p_flags| {
             let mut t = String::with_capacity(3);
             if p_flags & 1 == 1 { t.push_str("x"); } else { t.push_str("-"); };
