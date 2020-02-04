@@ -23,7 +23,7 @@ impl Elf64Shdr {
 
     pub fn parse_flags(&self) -> String {
         let mut t = String::new();
-        if self.sh_flags & (1 << 0) > 0 { t.push_str("w"); } else { t.push_str("-"); };
+        if self.sh_flags & 1 > 0 { t.push_str("w"); } else { t.push_str("-"); };
         if self.sh_flags & (1 << 1) > 0 { t.push_str("a"); } else { t.push_str("-"); };
         if self.sh_flags & (1 << 2) > 0 { t.push_str("x"); } else { t.push_str("-"); };
         if self.sh_flags & (1 << 4) > 0 { t.push_str("m"); } else { t.push_str("-"); };
@@ -34,14 +34,14 @@ impl Elf64Shdr {
         if self.sh_flags & (1 << 9) > 0 { t.push_str("g"); } else { t.push_str("-"); };
         if self.sh_flags & (1 << 10) > 0 { t.push_str("t"); } else { t.push_str("-"); };
         if self.sh_flags & (1 << 11) > 0 { t.push_str("c"); } else { t.push_str("-"); };
-        if self.sh_flags & 0x0ff00000 > 0 { t.push_str("O"); } else { t.push_str("-"); };
-        if self.sh_flags & 0xf0000000 > 0 { t.push_str("P"); } else { t.push_str("-"); };
+        if self.sh_flags & 0x0ff0_0000 > 0 { t.push_str("O"); } else { t.push_str("-"); };
+        if self.sh_flags & 0xf000_0000 > 0 { t.push_str("P"); } else { t.push_str("-"); };
         if self.sh_flags & (1 << 30) > 0 { t.push_str("o"); } else { t.push_str("-"); };
         if self.sh_flags & (1 << 31) > 0 { t.push_str("e"); } else { t.push_str("-"); };
         t
     }
 
-    pub fn explain(&self, name: &String) {
+    pub fn explain(&self, name: &str) {
         print!("0x{:016x}\t", self.sh_offset);
         print!("0x{:016x}\t", self.sh_size);
         print!("0x{:016x}\t", self.sh_link);
@@ -73,7 +73,7 @@ impl Elf64Shdr {
     }
 }
 
-pub fn explain_shdr_table(shdr_table: &Vec<Elf64Shdr>, e_shstrndx: usize, input_file: &Vec<u8>) {
+pub fn explain_shdr_table(shdr_table: &[Elf64Shdr], e_shstrndx: usize, input_file: &[u8]) {
     let shstrtab_start = shdr_table[e_shstrndx].sh_offset as usize;
     let shstrtab_end = (shdr_table[e_shstrndx].sh_offset + shdr_table[e_shstrndx].sh_size) as usize;
     let shstrtab = &input_file[shstrtab_start..shstrtab_end];
@@ -89,7 +89,7 @@ pub fn explain_shdr_table(shdr_table: &Vec<Elf64Shdr>, e_shstrndx: usize, input_
     println!("\nFlags:\n{}\n", SH_FLAGS);
 }
 
-pub fn parse_shdr(input_file: &Vec<u8>, ehdr: &Elf64Ehdr) -> Result<Vec<Elf64Shdr>, Error> {
+pub fn parse_shdr(input_file: &[u8], ehdr: &Elf64Ehdr) -> Result<Vec<Elf64Shdr>, Error> {
     let mut shdr_table = Vec::new();
     for i in 0..ehdr.e_shnum {
         let i_offset = (ehdr.e_shoff + (i * ehdr.e_shentsize) as u64) as usize;

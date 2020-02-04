@@ -51,10 +51,10 @@ pub fn parse_from_disk(path: &str) -> Result<ElfFile, Error> {
 
     Ok (ElfFile {
         file_path: String::from(path),
-        file_buffer: file_buffer,
-        ehdr: ehdr,
-        phdr: phdr,
-        shdr: shdr,
+        file_buffer,
+        ehdr,
+        phdr,
+        shdr,
     })
 }
 

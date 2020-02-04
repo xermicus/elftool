@@ -24,8 +24,8 @@ impl Elf64Phdr {
         print!("0x{:016x}\t", self.p_paddr);
         print!("0x{:016x}\t", self.p_filesz);
         if let Some(t) = P_TYPES.get(&self.p_type) {
-            match t {
-                &"PT_INTERP" => println!("{}", t), // TODO Print linker name
+            match *t {
+                "PT_INTERP" => println!("{}", t), // TODO Print linker name
                 _ => println!("{}", t),
             }
         } else {
@@ -45,8 +45,8 @@ impl Elf64Phdr {
     }
 }
 
-pub fn explain_phdr_table(phdr_table: &Vec<Elf64Phdr>) {
-    println!("Size\t\t\tPAddr\t\t\tFilesz\t\t\tType");
+pub fn explain_phdr_table(phdr_table: &[Elf64Phdr]) {
+    println!("Offset\t\t\tPAddr\t\t\tFilesz\t\t\tType");
     println!("Entsize\t\t\tVaddr\t\t\tMemsz\t\t\tFlags");
 	phdr_table.iter().for_each(|n| {
 		println!();
@@ -55,12 +55,12 @@ pub fn explain_phdr_table(phdr_table: &Vec<Elf64Phdr>) {
     println!()
 }
 
-pub fn is_section_in_segment(_phdr_table: &Vec<Elf64Phdr>, _sh_type: u32) -> bool {
+pub fn is_section_in_segment(_phdr_table: &[Elf64Phdr], _sh_type: u32) -> bool {
     // TODO
     false
 }
 
-pub fn parse_phdr(input_file: &Vec<u8>, ehdr: &Elf64Ehdr) -> Result<Vec<Elf64Phdr>, Error> {
+pub fn parse_phdr(input_file: &[u8], ehdr: &Elf64Ehdr) -> Result<Vec<Elf64Phdr>, Error> {
     if ehdr.e_type < 2 || ehdr.e_type > 3 || ehdr.e_phoff == 0 {
         return Err(Error::PhdrNotRelevant)
     }

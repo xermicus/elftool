@@ -113,7 +113,7 @@ impl Elf64Ehdr {
     }
 }
 
-pub fn parse_e_ident(input_buffer: &Vec<u8>) -> Result<EIdent, Error> {
+pub fn parse_e_ident(input_buffer: &[u8]) -> Result<EIdent, Error> {
     let mut e_ident = EIdent::default();
     
     e_ident.ei_mag.copy_from_slice(&input_buffer[..4]);
@@ -129,7 +129,7 @@ pub fn parse_e_ident(input_buffer: &Vec<u8>) -> Result<EIdent, Error> {
     Ok(e_ident)
 }
 
-pub fn parse_ehdr(input_file: &Vec<u8>) -> Result<Elf64Ehdr, Error> {
+pub fn parse_ehdr(input_file: &[u8]) -> Result<Elf64Ehdr, Error> {
     let ehdr_size = size_of::<Elf64Ehdr>();
     let input_buffer = &input_file[..ehdr_size];
 

@@ -235,17 +235,17 @@ lazy_static! {
         m.insert(6, "PT_PHDR");
         m.insert(7, "Thread-local storage segment");
         m.insert(8, "Number of defined types");
-        m.insert(0x60000000, "Start of OS-specific");
-        m.insert(0x6474e550, "GCC .eh_frame_hdr segment");
-        m.insert(0x6474e551, "Indicates stack executability");
-        m.insert(0x6474e552, "Read-only after relocation");
-        m.insert(0x6ffffffa, "Unkown");
-        m.insert(0x6ffffffa, "Sun Specific segment");
-        m.insert(0x6ffffffb, "Stack segment");
-        m.insert(0x6fffffff, "Unknown");
-        m.insert(0x6fffffff, "End of OS-specific");
-        m.insert(0x70000000, "Start of processor-specific");
-        m.insert(0x7fffffff, "End of processor-specific");
+        m.insert(0x6000_0000, "Start of OS-specific");
+        m.insert(0x6474_e550, "GCC .eh_frame_hdr segment");
+        m.insert(0x6474_e551, "Indicates stack executability");
+        m.insert(0x6474_e552, "Read-only after relocation");
+        m.insert(0x6fff_fffa, "Unkown");
+        m.insert(0x6fff_fffa, "Sun Specific segment");
+        m.insert(0x6fff_fffb, "Stack segment");
+        m.insert(0x6fff_ffff, "Unknown");
+        m.insert(0x6fff_ffff, "End of OS-specific");
+        m.insert(0x7000_0000, "Start of processor-specific");
+        m.insert(0x7fff_ffff, "End of processor-specific");
         m
     };
 
@@ -269,29 +269,29 @@ lazy_static! {
         m.insert(17, "Section group");
         m.insert(18, "Extended section indeces");
         m.insert(19, "Number of defined types.");
-        m.insert(0x60000000, "Start OS-specific.");
-        m.insert(0x6ffffff5, "Object attributes. ");
-        m.insert(0x6ffffff6, "GNU-style hash table. ");
-        m.insert(0x6ffffff7, "Prelink library list");
-        m.insert(0x6ffffff8, "Checksum for DSO content. ");
-        m.insert(0x6ffffffa, "Sun-specific low bound.");
-        m.insert(0x6ffffffa, "SHT_SUNW_move");
-        m.insert(0x6ffffffb, "SHT_SUNW_COMDAT");
-        m.insert(0x6ffffffc, "SHT_SUNW_syminfo");
-        m.insert(0x6ffffffd, "Version definition section.");
-        m.insert(0x6ffffffe, "Version needs section.");
-        m.insert(0x6fffffff, "Version symbol table. ");
-        m.insert(0x6fffffff, "Sun-specific high bound.");
-        m.insert(0x6fffffff, "End OS-specific type");
-        m.insert(0x70000000, "Start of processor-specific");
-        m.insert(0x7fffffff, "End of processor-specific");
-        m.insert(0x80000000, "Start of application-specific");
-        m.insert(0x8fffffff, "End of application-specific");
+        m.insert(0x6000_0000, "Start OS-specific.");
+        m.insert(0x6fff_fff5, "Object attributes. ");
+        m.insert(0x6fff_fff6, "GNU-style hash table. ");
+        m.insert(0x6fff_fff7, "Prelink library list");
+        m.insert(0x6fff_fff8, "Checksum for DSO content. ");
+        m.insert(0x6fff_fffa, "Sun-specific low bound.");
+        m.insert(0x6fff_fffa, "SHT_SUNW_move");
+        m.insert(0x6fff_fffb, "SHT_SUNW_COMDAT");
+        m.insert(0x6fff_fffc, "SHT_SUNW_syminfo");
+        m.insert(0x6fff_fffd, "Version definition section.");
+        m.insert(0x6fff_fffe, "Version needs section.");
+        m.insert(0x6fff_ffff, "Version symbol table. ");
+        m.insert(0x6fff_ffff, "Sun-specific high bound.");
+        m.insert(0x6fff_ffff, "End OS-specific type");
+        m.insert(0x7000_0000, "Start of processor-specific");
+        m.insert(0x7fff_ffff, "End of processor-specific");
+        m.insert(0x8000_0000, "Start of application-specific");
+        m.insert(0x8fff_ffff, "End of application-specific");
         m
     };
 }
 
-pub static SH_FLAGS: &'static str = "w\tSHF_WRITE\t\tWritable
+pub static SH_FLAGS: &str = "w\tSHF_WRITE\t\tWritable
 a\tSHF_ALLOC\t\tOccupies memory during execution
 x\tSHF_EXECINSTR\t\tExecutable
 m\tSHF_MERGE\t\tMight be merged
@@ -323,45 +323,51 @@ impl From<io::Error> for Error {
 }
 
 pub fn cast_u64(slice: &[u8], keep_endian: bool) -> Result<u64, Error> {
-    assert!(slice.len() == 8);
+    if slice.len() != 8 {
+        return Err(Error::ByteCastError)
+    }
     let mut result: u64 = 0;
     if keep_endian {
         for i in 0..8 {
-            result += (slice[i] as u64) << 56 - i * 8;
+            result += (slice[i] as u64) << (56 - i * 8);
         }
     } else {
         for i in 0..8 {
-            result += (slice[i] as u64) << 0 + i * 8;
+            result += (slice[i] as u64) << (i * 8);
         }
     }
     Ok(result)
 }
 
 pub fn cast_u32(slice: &[u8], keep_endian: bool) -> Result<u32, Error> {
-    assert!(slice.len() == 4);
+    if slice.len() != 4 {
+        return Err(Error::ByteCastError)
+    }
     let mut result: u32 = 0;
     if keep_endian {
         for i in 0..4 {
-            result += (slice[i] as u32) << 24 - i * 8;
+            result += (slice[i] as u32) << (24 - i * 8);
         }
     } else {
         for i in 0..4 {
-            result += (slice[i] as u32) << 0 + i * 8;
+            result += (slice[i] as u32) << (i * 8);
         }
     }
     Ok(result)
 }
 
 pub fn cast_u16(slice: &[u8], keep_endian: bool) -> Result<u16, Error> {
-    assert!(slice.len() == 2);
+    if slice.len() != 2 {
+        return Err(Error::ByteCastError)
+    }
     let mut result: u16 = 0;
     if keep_endian {
         for i in 0..2 {
-            result += (slice[i] as u16) << 8 - i * 8;
+            result += (slice[i] as u16) << (8 - i * 8);
         }
     } else {
         for i in 0..2 {
-            result += (slice[i] as u16) << 0 + i * 8;
+            result += (slice[i] as u16) << (i * 8);
         }
     }
     Ok(result)
